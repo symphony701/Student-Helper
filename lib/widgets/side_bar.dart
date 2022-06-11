@@ -56,7 +56,7 @@ class _SideBarState extends State<SideBar> {
                       const OptionSideBar(
                         title: 'Courses',
                         icon: FontAwesomeIcons.book,
-                        route: 'dashboard',
+                        route: 'courses',
                       ),
                       const SizedBox(height: 20),
                       const OptionSideBar(
