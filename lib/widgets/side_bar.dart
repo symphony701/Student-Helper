@@ -21,7 +21,7 @@ class _SideBarState extends State<SideBar> {
       child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width * 0.2,
-          color: const Color.fromARGB(255, 28, 33, 45),
+          color: Color.fromARGB(160, 28, 33, 45),
           child: Column(
             children: [
               WindowTitleBarBox(child: MoveWindow()),
@@ -91,7 +91,7 @@ class _SideBarState extends State<SideBar> {
       style: GoogleFonts.quicksand(
         fontSize: 14,
         fontWeight: FontWeight.bold,
-        color: const Color.fromARGB(131, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
       ),
     );
   }

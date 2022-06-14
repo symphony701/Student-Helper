@@ -18,7 +18,7 @@ class OptionSideBar extends StatefulWidget {
 
 class _OptionSideBarState extends State<OptionSideBar> {
   Color normalColor = const Color.fromARGB(216, 255, 255, 255);
-  Color selectedColorBackground = const Color.fromARGB(255, 28, 33, 45);
+  Color selectedColorBackground = Colors.transparent;
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
@@ -29,13 +29,17 @@ class _OptionSideBarState extends State<OptionSideBar> {
       },
       onExit: (PointerExitEvent hover) {
         normalColor = const Color.fromARGB(216, 255, 255, 255);
-        selectedColorBackground = const Color.fromARGB(255, 28, 33, 45);
+        selectedColorBackground = Colors.transparent;
         setState(() {});
       },
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, widget.route);
+          if (ModalRoute.of(context)!.settings.name.toString() !=
+              widget.route) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, widget.route, (route) => false);
+          }
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),

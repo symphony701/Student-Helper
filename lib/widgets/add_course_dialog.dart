@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:personal_ui/widgets/schedule_picker_dialog.dart';
 
 class AddCourseDialog extends StatefulWidget {
   AddCourseDialog({Key? key}) : super(key: key);
@@ -22,6 +23,8 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
     Colors.blue,
     Colors.amber,
   ];
+
+  List<Map<dynamic, dynamic>> schedules = [];
   @override
   Widget build(BuildContext context) {
     return BounceInDown(
@@ -95,47 +98,73 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
                           children: [
                             Expanded(
                               child: Text(
-                                'Schedule $index',
+                                '${schedules[index]["selectedDay"]}   ${schedules[index]["initialHour"]}:00 - ${schedules[index]["finalHour"]}:00',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
-                            const FaIcon(
-                              FontAwesomeIcons.trash,
-                              color: Colors.red,
+                            MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    schedules.removeAt(index);
+                                  });
+                                },
+                                child: const FaIcon(
+                                  FontAwesomeIcons.trash,
+                                  color: Colors.red,
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       );
                     },
-                    itemCount: 3,
+                    itemCount: schedules.length,
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              Container(
-                width: 400,
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 2,
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return SchedulePickerDialog();
+                        }).then((value) {
+                      setState(() {
+                        schedules.add(value);
+                      });
+                    });
+                  },
+                  child: Container(
+                    width: 400,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 2,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const FaIcon(FontAwesomeIcons.plus, size: 27),
+                        const SizedBox(width: 10),
+                        Text('Add Schedule',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            )),
+                      ],
+                    ),
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const FaIcon(FontAwesomeIcons.plus, size: 27),
-                    const SizedBox(width: 10),
-                    Text('Add Schedule',
-                        style: GoogleFonts.montserrat(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        )),
-                  ],
                 ),
               ),
               const SizedBox(height: 10),
@@ -159,12 +188,45 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
                     children: [
                       FaIcon(FontAwesomeIcons.check, color: currentColor),
                       const SizedBox(width: 10),
-                      Text('Save Course',
-                          style: GoogleFonts.montserrat(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          )),
+                      Text(
+                        'Save Course',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  maximumSize: const Size(400, 60),
+                  primary: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const FaIcon(FontAwesomeIcons.xmark, color: Colors.white),
+                      const SizedBox(width: 10),
+                      Text(
+                        'Cancel',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
                     ],
                   ),
                 ),

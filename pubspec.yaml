@@ -35,7 +35,15 @@ dependencies:
   auto_size_text: ^3.0.0
   animate_do: ^2.1.0
   flutter_colorpicker:
-
+  flutter_bloc: ^8.0.1
+  bloc:
+  equatable:
+  sqlite3_flutter_libs: ^0.5.0
+  path_provider: ^2.0.0
+  path:
+  objectbox: ^1.5.0
+  objectbox_flutter_libs: any
+  flutter_acrylic:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -50,6 +58,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  build_runner: ^2.1.11
+  objectbox_generator: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

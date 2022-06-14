@@ -8,6 +8,7 @@ class ClassSchedulesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Row(
         children: const [SideBar(), RightSide()],
       ),

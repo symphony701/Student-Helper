@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:personal_ui/pages/class_schedules/right_side.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:personal_ui/router/app_routes.dart';
-import 'package:personal_ui/widgets/side_bar.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Window.initialize();
+  await Window.setEffect(
+    effect: WindowEffect.aero,
+    color: const Color.fromARGB(50, 0, 0, 0),
+  );
   runApp(const MyApp());
   doWhenWindowReady(() {
     var initialSize = const Size(1150, 700);

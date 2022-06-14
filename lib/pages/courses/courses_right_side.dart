@@ -1,6 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:personal_ui/model/course_model.dart';
+import 'package:personal_ui/objectbox.g.dart';
 import 'package:personal_ui/widgets/add_course_dialog.dart';
 import 'package:personal_ui/widgets/course_item.dart';
 import 'package:personal_ui/widgets/windows_buttons.dart';
@@ -14,6 +16,24 @@ class CoursesRightSide extends StatefulWidget {
 }
 
 class _CoursesRightSideState extends State<CoursesRightSide> {
+  Store? _store;
+  Box<CourseModel>? courseBox;
+
+  @override
+  void initState() {
+    super.initState();
+    openStore().then((Store store) {
+      _store = store;
+      courseBox = store.box<CourseModel>();
+    });
+  }
+
+  @override
+  void dispose() {
+    _store?.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ElasticInUp(
@@ -52,6 +72,7 @@ class _CoursesRightSideState extends State<CoursesRightSide> {
                           primary: const Color.fromARGB(255, 28, 33, 45)),
                       onPressed: () {
                         showDialog(
+                            barrierDismissible: false,
                             context: context,
                             builder: (context) {
                               return AddCourseDialog();
