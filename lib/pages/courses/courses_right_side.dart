@@ -1,8 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:personal_ui/model/course_model.dart';
-import 'package:personal_ui/objectbox.g.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:personal_ui/bloc/courses/courses_bloc.dart';
+import 'package:personal_ui/services/courses_service.dart';
 import 'package:personal_ui/widgets/add_course_dialog.dart';
 import 'package:personal_ui/widgets/course_item.dart';
 import 'package:personal_ui/widgets/windows_buttons.dart';
@@ -16,24 +17,6 @@ class CoursesRightSide extends StatefulWidget {
 }
 
 class _CoursesRightSideState extends State<CoursesRightSide> {
-  Store? _store;
-  Box<CourseModel>? courseBox;
-
-  @override
-  void initState() {
-    super.initState();
-    openStore().then((Store store) {
-      _store = store;
-      courseBox = store.box<CourseModel>();
-    });
-  }
-
-  @override
-  void dispose() {
-    _store?.close();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ElasticInUp(
@@ -94,15 +77,55 @@ class _CoursesRightSideState extends State<CoursesRightSide> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return CourseItem(
-                    color: Colors.amber,
-                    courseName: 'Course $index',
-                  );
-                },
-                itemCount: 10,
+              child: BlocProvider(
+                create: (context) =>
+                    CoursesBloc(RepositoryProvider.of<CourseService>(context))
+                      ..add(const LoadCoursesEvent()),
+                child: BlocBuilder<CoursesBloc, CoursesState>(
+                  builder: (context, state) {
+                    if (state is CoursesLoadedState) {
+                      if (state.courses.isEmpty) {
+                        return Center(
+                          child: Text(
+                            'No courses yet :(',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return ListView(
+                        shrinkWrap: true,
+                        children: [
+                          ...state.courses
+                              .map((e) => CourseItem(
+                                  color: Colors.amber,
+                                  courseName: e.courseName))
+                              .toList(),
+                        ],
+                      );
+                    }
+                    if (state is CoursesInitial) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+/*
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return CourseItem(
+                      color: Colors.amber,
+                      courseName: 'Course $index',
+                    );
+                  },
+                  itemCount: 10,
+                ),*/
               ),
             ),
           ],

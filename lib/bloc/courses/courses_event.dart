@@ -1,14 +1,12 @@
 part of 'courses_bloc.dart';
 
-@immutable
-abstract class CoursesEvent {}
-
-class ChargeCoursesOfDataBase extends CoursesEvent {
-  final List<CourseModel> coursesCharged;
-  ChargeCoursesOfDataBase(this.coursesCharged);
+abstract class CoursesEvent extends Equatable {
+  const CoursesEvent();
 }
 
-class AddCourse extends CoursesEvent {
-  final CourseModel course;
-  AddCourse(this.course);
+class LoadCoursesEvent extends CoursesEvent {
+  const LoadCoursesEvent();
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
 }

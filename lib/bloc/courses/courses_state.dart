@@ -1,17 +1,19 @@
 part of 'courses_bloc.dart';
 
-@immutable
-abstract class CoursesState {
-  final List<CourseModel>? courses;
-
-  const CoursesState({this.courses});
+abstract class CoursesState extends Equatable {
+  const CoursesState();
 }
 
-class CoursesInitialState extends CoursesState {
-  const CoursesInitialState() : super(courses: null);
+class CoursesInitial extends CoursesState {
+  @override
+  List<Object> get props => [];
 }
 
-class CoursesChargeData extends CoursesState {
-  final List<CourseModel> coursesCharged;
-  const CoursesChargeData(this.coursesCharged) : super(courses: coursesCharged);
+class CoursesLoadedState extends CoursesState {
+  final List<Course> courses;
+
+  const CoursesLoadedState(this.courses);
+  @override
+  // TODO: implement props
+  List<Object?> get props => [courses];
 }
