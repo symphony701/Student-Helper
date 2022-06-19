@@ -108,7 +108,7 @@ class _CoursesRightSideState extends State<CoursesRightSide> {
                       );
                     }
                     if (state is CoursesInitial) {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
