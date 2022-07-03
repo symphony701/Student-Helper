@@ -1,15 +1,16 @@
-import 'package:hive/hive.dart';
+//part 'course.g.dart';
 
-part 'course.g.dart';
+import 'package:objectbox/objectbox.dart';
+import 'package:personal_ui/model/schedule.dart';
 
-@HiveType(typeId: 1)
-class Course extends HiveObject {
-  @HiveField(0)
-  final String courseName;
-  @HiveField(1)
-  final String color;
-  @HiveField(2)
-  final List<Map<dynamic, dynamic>> shedule;
+@Entity()
+class Course {
+  int id = 0;
+  String courseName;
+  String color;
 
-  Course(this.courseName, this.shedule, this.color);
+  @Backlink()
+  final schedules = ToMany<Schedule>();
+
+  Course(this.courseName, this.color);
 }

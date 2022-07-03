@@ -1,18 +1,16 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:personal_ui/model/course.dart';
-import 'package:personal_ui/services/courses_service.dart';
+import 'package:personal_ui/services/course_db.dart';
 
 part 'courses_event.dart';
 part 'courses_state.dart';
 
 class CoursesBloc extends Bloc<CoursesEvent, CoursesState> {
-  final CourseService _courseService;
-
-  CoursesBloc(this._courseService) : super(CoursesInitial()) {
+  final CourseDatabase courseDatabase;
+  CoursesBloc(this.courseDatabase) : super(CoursesInitial()) {
     on<LoadCoursesEvent>(((event, emit) {
-      final courses = _courseService.getCourses();
-      emit(CoursesLoadedState(courses));
+      //emit(CoursesLoadedState(courseDatabase.loadCourses()));
     }));
   }
 }
