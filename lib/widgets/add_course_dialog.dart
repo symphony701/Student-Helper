@@ -1,8 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:personal_ui/bloc/courses/courses_bloc.dart';
+import 'package:personal_ui/model/course.dart';
 import 'package:personal_ui/widgets/schedule_picker_dialog.dart';
 
 class AddCourseDialog extends StatefulWidget {
@@ -15,6 +18,7 @@ class AddCourseDialog extends StatefulWidget {
 class _AddCourseDialogState extends State<AddCourseDialog> {
   Color pickerColor = const Color.fromARGB(255, 255, 82, 70);
   Color currentColor = const Color.fromARGB(255, 255, 82, 70);
+  String courseName = '';
   List<Color> avalibleColors = const [
     Color.fromARGB(255, 255, 82, 70),
     Colors.orange,
@@ -49,6 +53,7 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
               SizedBox(
                 width: 400,
                 child: TextField(
+                  onChanged: (value) => courseName = value,
                   decoration: InputDecoration(
                     hintText: 'Course Name',
                     border: OutlineInputBorder(
@@ -98,7 +103,7 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
                           children: [
                             Expanded(
                               child: Text(
-                                '${schedules[index]["selectedDay"]}   ${schedules[index]["initialHour"]}:00 - ${schedules[index]["finalHour"]}:00',
+                                '${schedules[index]["dia"]}   ${schedules[index]["horaInicio"]}:00 - ${schedules[index]["horaFin"]}:00',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w500,
@@ -137,9 +142,11 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
                         builder: (context) {
                           return SchedulePickerDialog();
                         }).then((value) {
-                      setState(() {
-                        schedules.add(value);
-                      });
+                      if (value != null) {
+                        setState(() {
+                          schedules.add(value);
+                        });
+                      }
                     });
                   },
                   child: Container(
@@ -168,38 +175,54 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
                 ),
               ),
               const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  maximumSize: const Size(400, 60),
-                  primary: Colors.white,
-                  side: BorderSide(
-                    color: currentColor,
-                    width: 2,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FaIcon(FontAwesomeIcons.check, color: currentColor),
-                      const SizedBox(width: 10),
-                      Text(
-                        'Save Course',
-                        style: GoogleFonts.montserrat(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
+              BlocBuilder<CoursesBloc, CoursesState>(builder: (context, state) {
+                if (state is CoursesLoadedState) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      if (courseName.isNotEmpty && schedules.isNotEmpty) {
+                        String colorString = currentColor
+                            .toString()
+                            .split('(0x')[1]
+                            .split(')')[0];
+                        context.read<CoursesBloc>().add(AddCourseEvent(
+                            Course(color: colorString, courseName: courseName),
+                            schedules));
+                        Navigator.pop(context);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      maximumSize: const Size(400, 60),
+                      primary: Colors.white,
+                      side: BorderSide(
+                        color: currentColor,
+                        width: 2,
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FaIcon(FontAwesomeIcons.check, color: currentColor),
+                          const SizedBox(width: 10),
+                          Text(
+                            'Save Course',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                return const CircularProgressIndicator();
+              }),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {

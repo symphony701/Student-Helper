@@ -96,7 +96,8 @@ class _CoursesRightSideState extends State<CoursesRightSide> {
                       children: [
                         ...state.courses
                             .map((e) => CourseItem(
-                                color: Colors.amber, courseName: e.courseName))
+                                color: Color(int.parse(e.color!, radix: 16)),
+                                courseName: e.courseName!))
                             .toList(),
                       ],
                     );

@@ -1,16 +1,25 @@
 //part 'course.g.dart';
 
-import 'package:objectbox/objectbox.dart';
 import 'package:personal_ui/model/schedule.dart';
 
-@Entity()
 class Course {
-  int id = 0;
-  String courseName;
-  String color;
+  int? id;
+  String? courseName;
+  String? color;
 
-  @Backlink()
-  final schedules = ToMany<Schedule>();
+  Course({this.id, this.courseName, this.color});
 
-  Course(this.courseName, this.color);
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'courseName': courseName,
+      'color': color,
+    };
+  }
+
+  Course.fromMap(Map<String, dynamic> map) {
+    id = map['id'];
+    courseName = map['courseName'];
+    color = map['color'];
+  }
 }

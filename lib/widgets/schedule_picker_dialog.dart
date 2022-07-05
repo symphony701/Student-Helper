@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,6 +10,7 @@ class SchedulePickerDialog extends StatefulWidget {
 }
 
 class _SchedulePickerDialogState extends State<SchedulePickerDialog> {
+  String errorMessage = 'The initial hour must be less than the final hour';
   final List<String> _days = const [
     'Sunday',
     'Monday',
@@ -135,14 +137,29 @@ class _SchedulePickerDialogState extends State<SchedulePickerDialog> {
                 ),
               ],
             ),
+            _initialHour! >= _finalHour!
+                ? Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    width: 200,
+                    child: AutoSizeText(
+                      errorMessage,
+                      style: GoogleFonts.montserrat(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red),
+                    ),
+                  )
+                : const SizedBox(),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => {
-                Navigator.pop(context, {
-                  'initialHour': _initialHour,
-                  'finalHour': _finalHour,
-                  'selectedDay': _selectedDay,
-                })
+                _initialHour! >= _finalHour!
+                    ? null
+                    : Navigator.pop(context, {
+                        'horaInicio': _initialHour,
+                        'horaFin': _finalHour,
+                        'dia': _selectedDay,
+                      })
               },
               style: ElevatedButton.styleFrom(
                   primary: Colors.green,
